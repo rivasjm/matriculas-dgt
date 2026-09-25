@@ -1,2 +1,5 @@
 # Ficheros diarios crudos de la DGT (no versionar; se descargan de la fuente)
 export_mat_*.txt
+
+# Ruido de macOS
+.DS_Store

@@ -16,9 +16,8 @@ Los datos originales se distribuyen bajo licencia [Creative Commons Attribution 
 
 ```
 data/
-├── compile_matriculaciones.py   # compila los .txt de cada subdirectorio en un CSV
+├── sync_matriculaciones.py      # descarga los ZIP de la DGT y genera el CSV
 └── YYYYMM/                      # p. ej. 202609
-    ├── export_mat_YYYYMMDD.txt  # un fichero por día (ancho fijo)
     └── YYYYMM.csv               # compilación del subdirectorio
 ```
 
@@ -105,8 +104,17 @@ Las fechas usan el formato `DDMMYYYY`. El campo `BASTIDOR_ITV` solo incluye los 
 
 ## Uso
 
-Compilar todos los subdirectorios de `data/` en un CSV por subdirectorio:
+El script `data/sync_matriculaciones.py`:
+
+1. Lee el listado de la web de la DGT y obtiene los enlaces a los ZIP diarios.
+2. Descarga solo los días que aún no estén en el CSV de su mes, en `data/YYYYMM/`, creando el subdirectorio si no existe.
+3. Descomprime los ZIP y los elimina.
+4. Añade los registros nuevos a `data/YYYYMM/YYYYMM.csv`.
+5. Borra los `.txt` una vez volcados al CSV (en el repo solo queda el CSV).
 
 ```sh
-python3 data/compile_matriculaciones.py
+python3 data/sync_matriculaciones.py            # actualiza de forma incremental
+python3 data/sync_matriculaciones.py --force    # reescribe los CSV desde cero
 ```
+
+Opciones: `--data-dir DIR` (por defecto `data/`) y `--url URL` (listado a consultar).
